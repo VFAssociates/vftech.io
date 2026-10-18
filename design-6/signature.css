@@ -1,0 +1,8 @@
+/* Lumen (design 6) signature detail: a light that follows the pointer around a glass card's edge (signature.js). */
+.lm-glow{position:relative}
+.lm-glow::after{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;pointer-events:none;opacity:0;transition:opacity .35s;
+  background:radial-gradient(233px circle at var(--mx,50%) var(--my,0),rgb(200 190 255/.95),rgb(130 140 255/.35) 40%,transparent 70%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0)}
+.lm-glow:hover::after{opacity:1}
+:root[data-theme="light"] .lm-glow::after{background:radial-gradient(233px circle at var(--mx,50%) var(--my,0),rgb(80 70 230/.85),rgb(124 58 237/.3) 40%,transparent 70%)}
+.motion-paused .lm-glow::after{display:none}
