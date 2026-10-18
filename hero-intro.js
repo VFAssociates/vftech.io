@@ -16,7 +16,7 @@
   var R3 = Math.sqrt(3);
   var T_RAYS = [0.10, 1.25], T_MEET = 1.25, T_FADE = [1.40, 2.50], T_END = 2.7;
   var css = getComputedStyle(hero);
-  var LIGHT = (css.getPropertyValue('--blueline') || '#FFFFFF').trim();
+  var LIGHT = (css.getPropertyValue('--blueline') || '#8CC6E6').trim();
 
   // ---- geometry, measured once from the live layout ----
   var hr = hero.getBoundingClientRect(), W = hr.width, H = hr.height;

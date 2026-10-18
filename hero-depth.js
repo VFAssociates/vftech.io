@@ -46,9 +46,9 @@
   function makeSprite() {
     var c = document.createElement('canvas'), n = 64; c.width = c.height = n;
     var g = c.getContext('2d'), grad = g.createRadialGradient(n / 2, n / 2, 0, n / 2, n / 2, n / 2);
-    grad.addColorStop(0, 'rgba(255,255,255,1)');
-    grad.addColorStop(0.35, 'rgba(220,226,255,.55)');
-    grad.addColorStop(1, 'rgba(200,210,255,0)');
+    grad.addColorStop(0, 'rgba(236,241,242,1)');
+    grad.addColorStop(0.35, 'rgba(160,208,236,.55)');
+    grad.addColorStop(1, 'rgba(140,198,230,0)');
     g.fillStyle = grad; g.fillRect(0, 0, n, n);
     return c;
   }

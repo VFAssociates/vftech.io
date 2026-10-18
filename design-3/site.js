@@ -108,9 +108,9 @@
   }
   // A pause lasts for this visit only, so motion is back on the next one. (The old permanent
   // preference is cleared, so nobody stays stuck on a pause made while testing.)
-  // Motion always plays by default; there is no on-page pause control.
-  try { localStorage.removeItem('vftech-pattern'); sessionStorage.removeItem('vftech-motion'); } catch (e) {}
-  setPaused(false);
+  var savedMotion = null;
+  try { localStorage.removeItem('vftech-pattern'); savedMotion = sessionStorage.getItem('vftech-motion'); } catch (e) {}
+  setPaused(savedMotion === 'paused' || (savedMotion !== 'moving' && matchMedia('(prefers-reduced-motion: reduce)').matches));
   motionButtons.forEach(function (btn) {
     btn.addEventListener('click', function () {
       var paused = !root.classList.contains('motion-paused');
@@ -173,11 +173,20 @@
     var ruleObserver = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); ruleObserver.unobserve(e.target); } });
     }, { threshold: 0.05 });
-    document.querySelectorAll('.ledger, .sits, .tiers, .steps, .toc ul, .table-wrap').forEach(function (el) {
+    document.querySelectorAll('.toc ul').forEach(function (el) {
       el.classList.add('rule-draw'); ruleObserver.observe(el);
     });
     root.classList.add('reveal-ready');
   }
+
+  /* ---- linked cells: an ember glow follows the pointer ---- */
+  document.querySelectorAll('.cell.linked').forEach(function (cell) {
+    cell.addEventListener('pointermove', function (e) {
+      var r = cell.getBoundingClientRect();
+      cell.style.setProperty('--gx', (e.clientX - r.left).toFixed(0) + 'px');
+      cell.style.setProperty('--gy', (e.clientY - r.top).toFixed(0) + 'px');
+    });
+  });
 
   /* ---- header: a soft shadow lifts it off the sheet once the page scrolls ---- */
   var head = document.querySelector('.site-head');
@@ -185,22 +194,6 @@
     var syncHead = function () { head.classList.toggle('scrolled', window.scrollY > 4); };
     window.addEventListener('scroll', syncHead, { passive: true });
     syncHead();
-
-    // reading progress: a dimension line along the header's bottom edge, measuring how far down the sheet you are
-    var prog = document.createElement('div');
-    prog.className = 'read-progress';
-    prog.setAttribute('aria-hidden', 'true');
-    prog.innerHTML = '<i></i>';
-    head.appendChild(prog);
-    var progQueued = false;
-    var syncProgress = function () {
-      progQueued = false;
-      var max = document.documentElement.scrollHeight - window.innerHeight;
-      prog.style.setProperty('--p', max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)).toFixed(4) : '0');
-    };
-    window.addEventListener('scroll', function () { if (!progQueued) { progQueued = true; requestAnimationFrame(syncProgress); } }, { passive: true });
-    window.addEventListener('resize', syncProgress);
-    syncProgress();
   }
 
   /* ---- studio hero: aim the key light at the 3D mark, wherever the layout puts it ---- */
@@ -255,7 +248,7 @@
 
   /* ---- design switcher: the same page in each of the five designs (published side by side) ---- */
   (function () {
-    var HERE = 1, ROOT = '../';   // this design, and the path from here to the site root
+    var HERE = 3, ROOT = '';   // this design, and the path from here to the site root
     var file = root.getAttribute('data-page') || location.pathname.split('/').pop();   // the 404 page names itself index.html
     if (!/^[\w-]+\.html$/.test(file)) file = 'index.html';
     var page = file === 'index.html' ? '' : file;
