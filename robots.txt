@@ -3,4 +3,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://iamabotama.github.io/vftech.io/sitemap.xml
+Sitemap: https://vftech.io/sitemap.xml
